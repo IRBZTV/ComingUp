@@ -434,7 +434,7 @@ namespace ComingUpRndr
                 string DirPathDest = ConfigurationSettings.AppSettings["OutputPath"].ToString().Trim() + "\\" + Dt.Rows[0]["date"].ToString().Replace("\\", "-").Replace("/", "-") + "\\" + ConfigurationSettings.AppSettings["OutputFolderName"].ToString().Trim();
                 if (!Directory.Exists(DirPathDest))
                     Directory.CreateDirectory(DirPathDest);
-                string OutFile = ConfigurationSettings.AppSettings["OutputFilePrefix"].ToString().Trim() + "_" + Dt.Rows[0]["CassetteNo"].ToString() + ".avi";
+                string OutFile = ConfigurationSettings.AppSettings["OutputFilePrefix"].ToString().Trim() + "_" + Dt.Rows[0]["CassetteNo"].ToString() + ".mp4";
                 proc.StartInfo.Arguments = " -project " + "\"" + _AeProject + "\"" + "   -comp   \"" + Comp + "\" -output " + "\"" + DirPathDest + "\\" + OutFile + "\"";
                 proc.StartInfo.RedirectStandardError = true;
                 proc.StartInfo.UseShellExecute = false;
