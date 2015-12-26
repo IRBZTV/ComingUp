@@ -52,14 +52,11 @@ namespace ComingUpRndr
                 Application.DoEvents();
                 //Video:
                 MyDBTableAdapters.MASTER_DATATableAdapter Arch_Ta = new MyDBTableAdapters.MASTER_DATATableAdapter();
-
-
                 if (Dt.Rows.Count > 0)
                 {
                     DateTime NewDateTime = DateConversion.JD2GD("13" + Date);
                     string NDate = DateConversion.GD2JD(NewDateTime.AddDays(1)).Remove(0, 2);
                     Dt2 = Ta.SelectNextProgs(4 - Dt.Rows.Count, NDate, "00:00:00");
-
                     richTextBox1.Text += "Date:" + NewDateTime + " NdateTxt:" + NDate + " \n";
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
@@ -162,20 +159,30 @@ namespace ComingUpRndr
                         richTextBox1.SelectionStart = richTextBox1.Text.Length;
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
-                //        Str.WriteLine("D" + (i + 1).ToString() + "=[\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute + "\",\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\"]");
-
                         Str.WriteLine("D" + (i + 1).ToString() + "=[\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute + "\"]");
-
-
                         MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r"));
+                       
+                        
+                        //Arm1Q:
+                        string dirArm1 = ConfigurationSettings.AppSettings["Arm1Q"].ToString().Trim()+"\\"+ Dt.Rows[i]["date"].ToString().Replace("\\", "-").Replace("/", "-")+"_"+Dt.Rows[i]["Time"].ToString().Substring(0, 2) + "-" + FinalMinute;
+                        if (!Directory.Exists(dirArm1))
+                            Directory.CreateDirectory(dirArm1);
+
+
                         if(Arch_Dt.Rows.Count>0)
                         {
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4");
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4",true);
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), dirArm1 + "\\1.mp4", true);
                         }
                         else
                         {
-                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4");
-                        }
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4", true);
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), dirArm1+"\\1.mp4", true);
+                        }                        
+
+                        StreamWriter StrArm1 = new StreamWriter(dirArm1+"\\data.xml");
+                        StrArm1.WriteLine("D=[\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[i]["duration"].ToString().Substring(0, 2) + "\"]");
+                        StrArm1.Close();
                     }
                     for (int p = Dt.Rows.Count; p < 4; p++)
                     {
@@ -269,14 +276,25 @@ namespace ComingUpRndr
                         Application.DoEvents();
                         Str.WriteLine("D" + (p + 1).ToString() + "=[\"" + Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute  + "\"]");
                         MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r"));
+
+                        //Arm1Q:
+                        string dirArm1 = ConfigurationSettings.AppSettings["Arm1Q"].ToString().Trim() + "\\" + Dt.Rows[p - Dt.Rows.Count]["date"].ToString().Replace("\\", "-").Replace("/", "-") + "_" + Dt.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 2) + "-" + FinalMinute;
+                        if (!Directory.Exists(dirArm1))
+                            Directory.CreateDirectory(dirArm1);
+
                         if (Arch_Dt.Rows.Count > 0)
                         {
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4");
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4", true);
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), dirArm1 + "\\1.mp4", true);
                         }
                         else
                         {
-                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4");
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4", true);
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), dirArm1 + "\\1.mp4", true);
                         }
+                        StreamWriter StrArm1 = new StreamWriter(dirArm1 + "\\data.xml");
+                        StrArm1.WriteLine("D=[\"" + Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[p - Dt.Rows.Count]["duration"].ToString().Substring(0, 2)+ "\"]");
+                        StrArm1.Close();
                     }
                     Str.Close();
                     Render(Id, DisId, false);
@@ -378,10 +396,10 @@ namespace ComingUpRndr
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    //if (richTextBox1.Lines.Length > 10)
-                    //{
-                    //    richTextBox1.Text = "";
-                    //}
+                    if (richTextBox1.Lines.Length > 10)
+                    {
+                        richTextBox1.Text = "";
+                    }
                     richTextBox1.Text += (line) + " \n";
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
@@ -451,8 +469,6 @@ namespace ComingUpRndr
                     Random R = new Random();
                     file = rgFiles.ElementAt(R.Next(0, rgFiles.Count())).FullName;
                 }
-                // probably should only catch specific exceptions
-                // throwable by the above methods.
                 catch { }
             }
             return file;
