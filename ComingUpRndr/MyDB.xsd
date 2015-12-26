@@ -2,10 +2,11 @@
 <xs:schema id="MyDB" targetNamespace="http://tempuri.org/MyDB.xsd" xmlns:mstns="http://tempuri.org/MyDB.xsd" xmlns="http://tempuri.org/MyDB.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
   <xs:annotation>
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
-      <DataSource DefaultConnectionIndex="1" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="2" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DB_BazaarConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DB_BazaarConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ComingUpRndr.Properties.Settings.GlobalReference.Default.DB_BazaarConnectionString" Provider="System.Data.SqlClient" />
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="PARCHConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="PARCHConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ComingUpRndr.Properties.Settings.GlobalReference.Default.PARCHConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="ARCHIVEConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="ARCHIVEConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ComingUpRndr.Properties.Settings.GlobalReference.Default.ARCHIVEConnectionString" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="DisplayProgTableAdapter" GeneratorDataComponentClassName="DisplayProgTableAdapter" Name="DisplayProg" UserDataComponentName="DisplayProgTableAdapter">
@@ -425,7 +426,7 @@ SELECT ID, DISPLAYID, ISDONE, DONETIME, INSERTTIME, DESCR, SAD FROM COMINGUP WHE
               <Mapping SourceColumn="SAD" DataSetColumn="SAD" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="DeleteQueue" Modifier="Public" Name="DeleteQueue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="DeleteQueue">
+              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="DeleteQueue" Modifier="Public" Name="DeleteQueue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="DeleteQueue">
                 <DeleteCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>delete           COMINGUP
@@ -434,7 +435,7 @@ where descr is null and isdone=0</CommandText>
                   </DbCommand>
                 </DeleteCommand>
               </DbSource>
-              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateTask" Modifier="Public" Name="UpdateTask" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="UpdateTask">
+              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateTask" Modifier="Public" Name="UpdateTask" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="UpdateTask">
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>UPDATE       COMINGUP
@@ -446,7 +447,7 @@ WHERE        (ID = @Id)</CommandText>
                   </DbCommand>
                 </UpdateCommand>
               </DbSource>
-              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateText" Modifier="Public" Name="UpdateText" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="UpdateText">
+              <DbSource ConnectionRef="PARCHConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="UpdateText" Modifier="Public" Name="UpdateText" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="UpdateText">
                 <UpdateCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>UPDATE       COMINGUP
@@ -461,6 +462,67 @@ WHERE        (ID = @Id)</CommandText>
               </DbSource>
             </Sources>
           </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="MASTER_DATATableAdapter" GeneratorDataComponentClassName="MASTER_DATATableAdapter" Name="MASTER_DATA" UserDataComponentName="MASTER_DATATableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="ARCHIVEConnectionString (Settings)" DbObjectName="ARCHIVE.dbo.MASTER_DATA" DbObjectType="Table" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="GetData">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [MASTER_DATA] WHERE (([ID] = @Original_ID))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [MASTER_DATA] ([TITLE], [Title2], [DESCRIPTION], [VIDEO_PATH_HI]) VALUES (@TITLE, @Title2, @DESCRIPTION, @VIDEO_PATH_HI);
+SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = SCOPE_IDENTITY()) ORDER BY ID DESC</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@TITLE" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="TITLE" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Title2" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Title2" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@DESCRIPTION" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="DESCRIPTION" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@VIDEO_PATH_HI" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="VIDEO_PATH_HI" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI
+FROM   MASTER_DATA
+WHERE (TITLE LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL) OR
+             (Title2 LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL) OR
+             (DESCRIPTION LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL)
+ORDER BY ID DESC</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="text" ColumnName="TITLE" DataSourceName="ARCHIVE.dbo.MASTER_DATA" DataTypeServer="nvarchar(MAX)" DbType="String" Direction="Input" ParameterName="@text" Precision="0" ProviderType="NVarChar" Scale="0" Size="2147483647" SourceColumn="TITLE" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [MASTER_DATA] SET [TITLE] = @TITLE, [Title2] = @Title2, [DESCRIPTION] = @DESCRIPTION, [VIDEO_PATH_HI] = @VIDEO_PATH_HI WHERE (([ID] = @Original_ID));
+SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = @ID) ORDER BY ID DESC</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@TITLE" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="TITLE" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@Title2" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="Title2" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@DESCRIPTION" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="DESCRIPTION" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@VIDEO_PATH_HI" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="VIDEO_PATH_HI" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_ID" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="ID" ColumnName="ID" DataSourceName="ARCHIVE.dbo.MASTER_DATA" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@ID" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="ID" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="ID" DataSetColumn="ID" />
+              <Mapping SourceColumn="TITLE" DataSetColumn="TITLE" />
+              <Mapping SourceColumn="Title2" DataSetColumn="Title2" />
+              <Mapping SourceColumn="DESCRIPTION" DataSetColumn="DESCRIPTION" />
+              <Mapping SourceColumn="VIDEO_PATH_HI" DataSetColumn="VIDEO_PATH_HI" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
         </Tables>
         <Sources />
       </DataSource>
@@ -469,7 +531,7 @@ WHERE        (ID = @Id)</CommandText>
   <xs:element name="MyDB" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MyDB" msprop:Generator_UserDSName="MyDB">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="DisplayProg" msprop:Generator_TableClassName="DisplayProgDataTable" msprop:Generator_TableVarName="tableDisplayProg" msprop:Generator_TablePropName="DisplayProg" msprop:Generator_RowDeletingName="DisplayProgRowDeleting" msprop:Generator_RowChangingName="DisplayProgRowChanging" msprop:Generator_RowEvHandlerName="DisplayProgRowChangeEventHandler" msprop:Generator_RowDeletedName="DisplayProgRowDeleted" msprop:Generator_UserTableName="DisplayProg" msprop:Generator_RowChangedName="DisplayProgRowChanged" msprop:Generator_RowEvArgName="DisplayProgRowChangeEvent" msprop:Generator_RowClassName="DisplayProgRow">
+        <xs:element name="DisplayProg" msprop:Generator_TableClassName="DisplayProgDataTable" msprop:Generator_TableVarName="tableDisplayProg" msprop:Generator_RowChangedName="DisplayProgRowChanged" msprop:Generator_TablePropName="DisplayProg" msprop:Generator_RowDeletingName="DisplayProgRowDeleting" msprop:Generator_RowChangingName="DisplayProgRowChanging" msprop:Generator_RowEvHandlerName="DisplayProgRowChangeEventHandler" msprop:Generator_RowDeletedName="DisplayProgRowDeleted" msprop:Generator_RowClassName="DisplayProgRow" msprop:Generator_UserTableName="DisplayProg" msprop:Generator_RowEvArgName="DisplayProgRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID_Display" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID_Display" msprop:Generator_ColumnPropNameInRow="ID_Display" msprop:Generator_ColumnPropNameInTable="ID_DisplayColumn" msprop:Generator_UserColumnName="ID_Display" type="xs:int" />
@@ -714,7 +776,7 @@ WHERE        (ID = @Id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="COMINGUP" msprop:Generator_TableClassName="COMINGUPDataTable" msprop:Generator_TableVarName="tableCOMINGUP" msprop:Generator_TablePropName="COMINGUP" msprop:Generator_RowDeletingName="COMINGUPRowDeleting" msprop:Generator_RowChangingName="COMINGUPRowChanging" msprop:Generator_RowEvHandlerName="COMINGUPRowChangeEventHandler" msprop:Generator_RowDeletedName="COMINGUPRowDeleted" msprop:Generator_UserTableName="COMINGUP" msprop:Generator_RowChangedName="COMINGUPRowChanged" msprop:Generator_RowEvArgName="COMINGUPRowChangeEvent" msprop:Generator_RowClassName="COMINGUPRow">
+        <xs:element name="COMINGUP" msprop:Generator_TableClassName="COMINGUPDataTable" msprop:Generator_TableVarName="tableCOMINGUP" msprop:Generator_RowChangedName="COMINGUPRowChanged" msprop:Generator_TablePropName="COMINGUP" msprop:Generator_RowDeletingName="COMINGUPRowDeleting" msprop:Generator_RowChangingName="COMINGUPRowChanging" msprop:Generator_RowEvHandlerName="COMINGUPRowChangeEventHandler" msprop:Generator_RowDeletedName="COMINGUPRowDeleted" msprop:Generator_RowClassName="COMINGUPRow" msprop:Generator_UserTableName="COMINGUP" msprop:Generator_RowEvArgName="COMINGUPRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:long" />
@@ -733,6 +795,41 @@ WHERE        (ID = @Id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="MASTER_DATA" msprop:Generator_TableClassName="MASTER_DATADataTable" msprop:Generator_TableVarName="tableMASTER_DATA" msprop:Generator_TablePropName="MASTER_DATA" msprop:Generator_RowDeletingName="MASTER_DATARowDeleting" msprop:Generator_RowChangingName="MASTER_DATARowChanging" msprop:Generator_RowEvHandlerName="MASTER_DATARowChangeEventHandler" msprop:Generator_RowDeletedName="MASTER_DATARowDeleted" msprop:Generator_UserTableName="MASTER_DATA" msprop:Generator_RowChangedName="MASTER_DATARowChanged" msprop:Generator_RowEvArgName="MASTER_DATARowChangeEvent" msprop:Generator_RowClassName="MASTER_DATARow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="TITLE" msprop:Generator_ColumnVarNameInTable="columnTITLE" msprop:Generator_ColumnPropNameInRow="TITLE" msprop:Generator_ColumnPropNameInTable="TITLEColumn" msprop:Generator_UserColumnName="TITLE" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Title2" msprop:Generator_ColumnVarNameInTable="columnTitle2" msprop:Generator_ColumnPropNameInRow="Title2" msprop:Generator_ColumnPropNameInTable="Title2Column" msprop:Generator_UserColumnName="Title2" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="DESCRIPTION" msprop:Generator_ColumnVarNameInTable="columnDESCRIPTION" msprop:Generator_ColumnPropNameInRow="DESCRIPTION" msprop:Generator_ColumnPropNameInTable="DESCRIPTIONColumn" msprop:Generator_UserColumnName="DESCRIPTION" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="VIDEO_PATH_HI" msprop:Generator_ColumnVarNameInTable="columnVIDEO_PATH_HI" msprop:Generator_ColumnPropNameInRow="VIDEO_PATH_HI" msprop:Generator_ColumnPropNameInTable="VIDEO_PATH_HIColumn" msprop:Generator_UserColumnName="VIDEO_PATH_HI" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
@@ -741,6 +838,10 @@ WHERE        (ID = @Id)</CommandText>
     </xs:unique>
     <xs:unique name="COMINGUP_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:COMINGUP" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="MASTER_DATA_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:MASTER_DATA" />
       <xs:field xpath="mstns:ID" />
     </xs:unique>
   </xs:element>

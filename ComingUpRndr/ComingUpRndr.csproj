@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ComingUpRndr</RootNamespace>
     <AssemblyName>ComingUpRndr</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -57,7 +58,6 @@
     </Compile>
     <Compile Include="MyDB.cs">
       <DependentUpon>MyDB.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MyDB.Designer.cs">
       <AutoGen>True</AutoGen>

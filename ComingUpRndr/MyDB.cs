@@ -1,7 +1,9 @@
-﻿namespace ComingUpRndr {
-    
-    
-    public partial class MyDB {
+﻿namespace ComingUpRndr
+{
+
+
+    public partial class MyDB
+    {
     }
 }
 

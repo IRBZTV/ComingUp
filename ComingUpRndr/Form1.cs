@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -20,85 +21,67 @@ namespace ComingUpRndr
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                DirectoryInfo dir = new DirectoryInfo(ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim());
+                foreach (System.IO.FileInfo file in dir.GetFiles()) file.Delete();
+            }
+            catch
+            { }
         }
         protected void GenerateScript(string Date, string Time, int Id, int DisId, bool IsSad)
         {
             try
             {
-                if (IsSad)
-                {
-                    _AeProject = ConfigurationSettings.AppSettings["AeProjectPathSad"].ToString().Trim();
-                }
-                else
-                {
-                    _AeProject = ConfigurationSettings.AppSettings["AeProjectPath"].ToString().Trim();
-                }
+                //if (IsSad)
+                //{
+                //    _AeProject = ConfigurationSettings.AppSettings["AeProjectPathSad"].ToString().Trim();
+                //}
+                //else
+                //{
+                _AeProject = ConfigurationSettings.AppSettings["AeProjectPath"].ToString().Trim();
+                //}
                 MyDBTableAdapters.DisplayProgTableAdapter Ta = new MyDBTableAdapters.DisplayProgTableAdapter();
-                MyDB.DisplayProgDataTable Dt = Ta.SelectNextProgs(5, Date, Time);
+                MyDB.DisplayProgDataTable Dt = Ta.SelectNextProgs(4, Date, Time);
                 MyDB.DisplayProgDataTable Dt2 = new MyDB.DisplayProgDataTable();
-
                 richTextBox1.Text += Date + " \n";
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
                 Application.DoEvents();
+                //Video:
+                MyDBTableAdapters.MASTER_DATATableAdapter Arch_Ta = new MyDBTableAdapters.MASTER_DATATableAdapter();
 
 
                 if (Dt.Rows.Count > 0)
                 {
-
-
                     DateTime NewDateTime = DateConversion.JD2GD("13" + Date);
                     string NDate = DateConversion.GD2JD(NewDateTime.AddDays(1)).Remove(0, 2);
-                    Dt2 = Ta.SelectNextProgs(5 - Dt.Rows.Count, NDate, "00:00:00");
+                    Dt2 = Ta.SelectNextProgs(4 - Dt.Rows.Count, NDate, "00:00:00");
 
                     richTextBox1.Text += "Date:" + NewDateTime + " NdateTxt:" + NDate + " \n";
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
                     Application.DoEvents();
                 }
-
-
-                if (Dt.Rows.Count + Dt2.Rows.Count == 5)
+                if (Dt.Rows.Count + Dt2.Rows.Count == 4)
                 {
-                    richTextBox1.Text += "Generate Script" + " \n";
+                    richTextBox1.Text += "Generate XML" + " \n";
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
                     Application.DoEvents();
-
-                    StreamWriter Str = new StreamWriter(Path.GetDirectoryName(Application.ExecutablePath) + "//Scr.jsx");
-                    Str.WriteLine("app.open(new File(\"" + _AeProject.Replace("\\", "\\\\") + "\"));  ");
-                    Str.WriteLine("function LayerText(tname,text)  ");
-                    Str.WriteLine("{  ");
-                    Str.WriteLine("for(var i = 1; i <= app.project.numItems; i++) {  ");
-                    Str.WriteLine("var B=app.project.item(i);  ");
-                    Str.WriteLine("for(var j=1; j <= B.numLayers;j++) {  ");
-                    Str.WriteLine("	var L=B.layer(j);  ");
-                    Str.WriteLine("	if(L.name==tname) {  ");
-                    Str.WriteLine("	L.sourceText.setValue(text);  ");
-                    Str.WriteLine("	break;  ");
-                    Str.WriteLine("}  ");
-                    Str.WriteLine("}  ");
-                    Str.WriteLine("}  ");
-                    Str.WriteLine("}  ");
-
+                    StreamWriter Str = new StreamWriter(ConfigurationSettings.AppSettings["xml"].ToString().Trim());
                     for (int i = 0; i < Dt.Rows.Count; i++)
                     {
                         richTextBox1.Text += "Part Today \n";
                         richTextBox1.SelectionStart = richTextBox1.Text.Length;
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
-
-
-                        Str.WriteLine(" LayerText (\"T" + (i + 1).ToString() + "\",\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\");  ");
-
                         int Minute = int.Parse(Dt.Rows[i]["Time"].ToString().Substring(3, 2));
                         double Sec = Minute * 60 + int.Parse(Dt.Rows[i]["Time"].ToString().Substring(6, 2));
                         string TextTime = Dt.Rows[i]["Time"].ToString().Substring(3, 5);
                         string FinalMinute = "00";
-
                         #region RoundMinutes
                         if (Sec <= 150)
                         {
@@ -179,30 +162,31 @@ namespace ComingUpRndr
                         richTextBox1.SelectionStart = richTextBox1.Text.Length;
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
+                //        Str.WriteLine("D" + (i + 1).ToString() + "=[\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute + "\",\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\"]");
+
+                        Str.WriteLine("D" + (i + 1).ToString() + "=[\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute + "\"]");
 
 
-                        Str.WriteLine(" LayerText (\"T" + (i + 1).ToString() + "T1\",\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (i + 1).ToString() + "T2\",\"" + Dt.Rows[i]["Time"].ToString().Substring(1, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (i + 1).ToString() + "T3\",\"" + FinalMinute.Substring(0, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (i + 1).ToString() + "T4\",\"" + FinalMinute.Substring(1, 1) + "\");  ");
+                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r"));
+                        if(Arch_Dt.Rows.Count>0)
+                        {
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4");
+                        }
+                        else
+                        {
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4");
+                        }
                     }
-
-
-                    for (int p = Dt.Rows.Count; p < 5; p++)
+                    for (int p = Dt.Rows.Count; p < 4; p++)
                     {
                         richTextBox1.Text += "Part Tomorrow \n";
                         richTextBox1.SelectionStart = richTextBox1.Text.Length;
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
-
-
-                        Str.WriteLine(" LayerText (\"T" + (p + 1).ToString() + "\",\"" + Dt2.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r") + "\");  ");
-
                         int Minute = int.Parse(Dt2.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(3, 2));
                         double Sec = Minute * 60 + int.Parse(Dt2.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(6, 2));
                         string TextTime = Dt2.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(3, 5);
                         string FinalMinute = "00";
-
                         #region RoundMinutes
                         if (Sec <= 150)
                         {
@@ -279,36 +263,33 @@ namespace ComingUpRndr
 
 
                         #endregion
-
                         richTextBox1.Text += "MM:SS " + TextTime + " >> " + FinalMinute + " \n";
                         richTextBox1.SelectionStart = richTextBox1.Text.Length;
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
-
-
-                        Str.WriteLine(" LayerText (\"T" + (p + 1).ToString() + "T1\",\"" + Dt2.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (p + 1).ToString() + "T2\",\"" + Dt2.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(1, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (p + 1).ToString() + "T3\",\"" + FinalMinute.Substring(0, 1) + "\");  ");
-                        Str.WriteLine(" LayerText (\"T" + (p + 1).ToString() + "T4\",\"" + FinalMinute.Substring(1, 1) + "\");  ");
+                        Str.WriteLine("D" + (p + 1).ToString() + "=[\"" + Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute  + "\"]");
+                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r"));
+                        if (Arch_Dt.Rows.Count > 0)
+                        {
+                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4");
+                        }
+                        else
+                        {
+                            File.Copy(getrandomfile2(ConfigurationSettings.AppSettings["VideoRepository"].ToString().Trim()), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4");
+                        }
                     }
-
-                    Str.WriteLine("app.project.save()");
-                    Str.WriteLine("app.quit();");
                     Str.Close();
-
-                    ApplyScript(Id, DisId, IsSad);
+                    Render(Id, DisId, false);
                 }
                 else
                 {
-                    richTextBox1.Text += "There is no 5 Item after Coming Up in Conductor" + " \n";
+                    richTextBox1.Text += "There is no 4 Item after Coming Up in Conductor" + " \n";
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
                     Application.DoEvents();
-
                     MyDBTableAdapters.COMINGUPTableAdapter TaTS = new MyDBTableAdapters.COMINGUPTableAdapter();
-                    TaTS.UpdateText("There is no 5 Item", Id);
+                    TaTS.UpdateText("There is no 4 Item", Id);
                 }
-
             }
             catch (Exception Exp)
             {
@@ -316,54 +297,10 @@ namespace ComingUpRndr
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
                 Application.DoEvents();
-
                 MyDBTableAdapters.COMINGUPTableAdapter TaTS = new MyDBTableAdapters.COMINGUPTableAdapter();
                 TaTS.UpdateText(Exp.Message, Id); throw;
             }
-
-
-
         }
-
-        protected void ApplyScript(int Id, int DisId, bool Sad)
-        {
-            richTextBox1.Text += "Apply Script" + " \n";
-            richTextBox1.SelectionStart = richTextBox1.Text.Length;
-            richTextBox1.ScrollToCaret();
-            Application.DoEvents();
-
-            Process proc = new Process();
-
-            proc.StartInfo.FileName = "\"" + ConfigurationSettings.AppSettings["AeRenderPath"].ToString().Trim() + "afterfx.com" + "\"";
-
-            string ScriptFile = Path.GetDirectoryName(Application.ExecutablePath) + "\\Scr.jsx";
-            proc.StartInfo.Arguments = "  -r  " + "\"" + ScriptFile + "\"";
-            proc.StartInfo.RedirectStandardError = true;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.EnableRaisingEvents = true;
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.RedirectStandardError = true;
-            proc.Start();
-            proc.PriorityClass = ProcessPriorityClass.Normal;
-            StreamReader reader = proc.StandardOutput;
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                //if (richTextBox1.Lines.Length > 10)
-                //{
-                //    richTextBox1.Text = "";
-                //}
-                richTextBox1.Text += (line) + " \n";
-                richTextBox1.SelectionStart = richTextBox1.Text.Length;
-                richTextBox1.ScrollToCaret();
-                Application.DoEvents();
-
-            }
-            proc.Close();
-            Render(Id, DisId, Sad);
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             timer1.Enabled = false;
@@ -413,24 +350,17 @@ namespace ComingUpRndr
         }
         protected void Render(int Id, int DisId, bool Sad)
         {
-
             richTextBox1.Text += "Start Render" + " \n";
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
             Application.DoEvents();
-
-
             try
             {
                 MyDBTableAdapters.DisplayProgTableAdapter Ta = new MyDBTableAdapters.DisplayProgTableAdapter();
                 MyDB.DisplayProgDataTable Dt = Ta.SelectProgById(DisId);
-
                 Process proc = new Process();
-
                 proc.StartInfo.FileName = "\"" + ConfigurationSettings.AppSettings["AeRenderPath"].ToString().Trim() + "aerender.exe" + "\"";
-
                 string Comp = ConfigurationSettings.AppSettings["AeComposition"].ToString().Trim();
-
                 string DirPathDest = ConfigurationSettings.AppSettings["OutputPath"].ToString().Trim() + "\\" + Dt.Rows[0]["date"].ToString().Replace("\\", "-").Replace("/", "-") + "\\" + ConfigurationSettings.AppSettings["OutputFolderName"].ToString().Trim();
                 if (!Directory.Exists(DirPathDest))
                     Directory.CreateDirectory(DirPathDest);
@@ -442,10 +372,7 @@ namespace ComingUpRndr
                 proc.EnableRaisingEvents = true;
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.RedirectStandardError = true;
-
                 proc.Start();
-
-
                 proc.PriorityClass = ProcessPriorityClass.Normal;
                 StreamReader reader = proc.StandardOutput;
                 string line;
@@ -459,10 +386,8 @@ namespace ComingUpRndr
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
                     Application.DoEvents();
-
                 }
                 proc.Close();
-
                 MyDBTableAdapters.COMINGUPTableAdapter TaTS = new MyDBTableAdapters.COMINGUPTableAdapter();
                 TaTS.UpdateTask(Id);
             }
@@ -473,14 +398,12 @@ namespace ComingUpRndr
                 richTextBox1.ScrollToCaret();
                 Application.DoEvents();
             }
-
             richTextBox1.Text += DateTime.Now.ToString() + " \n";
             richTextBox1.Text += "=======Task Finished======" + " \n";
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
             Application.DoEvents();
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             richTextBox1.Text = "";
@@ -504,7 +427,6 @@ namespace ComingUpRndr
             }
 
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             DialogResult Dr = MessageBox.Show("Are you sure to delete render queue", "Delete Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -516,6 +438,24 @@ namespace ComingUpRndr
                 button1_Click(new object(), new EventArgs());
             }
         }
-
+        private string getrandomfile2(string path)
+        {
+            string file = null;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var extensions = new string[] { ".mp4" };
+                try
+                {
+                    var di = new DirectoryInfo(path);
+                    var rgFiles = di.GetFiles("*.*").Where(f => extensions.Contains(f.Extension.ToLower()));
+                    Random R = new Random();
+                    file = rgFiles.ElementAt(R.Next(0, rgFiles.Count())).FullName;
+                }
+                // probably should only catch specific exceptions
+                // throwable by the above methods.
+                catch { }
+            }
+            return file;
+        }
     }
 }
