@@ -33,6 +33,7 @@ namespace ComingUpRndr
         }
         protected void GenerateScript(string Date, string Time, int Id, int DisId, bool IsSad)
         {
+                    StreamWriter Str = new StreamWriter(ConfigurationSettings.AppSettings["xml"].ToString().Trim());
             try
             {
                 //if (IsSad)
@@ -68,7 +69,6 @@ namespace ComingUpRndr
                     richTextBox1.SelectionStart = richTextBox1.Text.Length;
                     richTextBox1.ScrollToCaret();
                     Application.DoEvents();
-                    StreamWriter Str = new StreamWriter(ConfigurationSettings.AppSettings["xml"].ToString().Trim());
                     for (int i = 0; i < Dt.Rows.Count; i++)
                     {
                         richTextBox1.Text += "Part Today \n";
@@ -171,8 +171,10 @@ namespace ComingUpRndr
 
                         if(Arch_Dt.Rows.Count>0)
                         {
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4",true);
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), dirArm1 + "\\1.mp4", true);
+                            Splitter(Arch_Dt[0]["Video_Path_Hi"].ToString(), Path.GetDirectoryName(Application.ExecutablePath) + "\\Splitted.mp4");
+                            Repair(Path.GetDirectoryName(Application.ExecutablePath) + "\\Splitted.mp4", Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4");
+                            File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4", ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (i + 1).ToString() + ".mp4", true);
+                            File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4", dirArm1 + "\\1.mp4", true);
                         }
                         else
                         {
@@ -284,8 +286,10 @@ namespace ComingUpRndr
 
                         if (Arch_Dt.Rows.Count > 0)
                         {
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4", true);
-                            File.Copy(Arch_Dt[0]["Video_Path_Hi"].ToString(), dirArm1 + "\\1.mp4", true);
+                            Splitter(Arch_Dt[0]["Video_Path_Hi"].ToString(), Path.GetDirectoryName(Application.ExecutablePath) + "\\Splitted.mp4");
+                            Repair(Path.GetDirectoryName(Application.ExecutablePath) + "\\Splitted.mp4", Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4");
+                            File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4", ConfigurationSettings.AppSettings["VideoFootage"].ToString().Trim() + "\\" + (p + 1).ToString() + ".mp4", true);
+                            File.Copy(Path.GetDirectoryName(Application.ExecutablePath) + "\\Converted.mp4", dirArm1 + "\\1.mp4", true);
                         }
                         else
                         {
@@ -311,6 +315,7 @@ namespace ComingUpRndr
             }
             catch (Exception Exp)
             {
+                Str.Close();
                 richTextBox1.Text += Exp.Message + " \n";
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
@@ -472,6 +477,59 @@ namespace ComingUpRndr
                 catch { }
             }
             return file;
+        }
+        protected void Splitter(string inFile,string outFile)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = Path.GetDirectoryName(Application.ExecutablePath) + "//mencoder";
+            proc.StartInfo.Arguments = " -ss 00:01:00  -endpos 00:00:30 -oac pcm -ovc x264 " + "  \"" + inFile + "\"   -o \"" + outFile+ "\"";
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.EnableRaisingEvents = true;
+            proc.Start();
+            StreamReader reader = proc.StandardError;
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                LogWriter(line);
+            }
+            proc.Close();
+        }
+        protected void Repair(string Infile, string OutFile)
+        {
+            LogWriter("Star Fixing " + Infile);
+            Process proc = new Process();
+            proc.StartInfo.FileName = Path.GetDirectoryName(Application.ExecutablePath) + "//ffmpeg";
+            proc.StartInfo.Arguments = " -i  \""+ Infile + "\"   -y \"" + OutFile + "\"";
+            LogWriter(proc.StartInfo.Arguments);
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.EnableRaisingEvents = true;
+            proc.Start();
+            proc.PriorityClass = ProcessPriorityClass.Normal;
+            StreamReader reader = proc.StandardError;
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                LogWriter(line);
+            }
+            proc.Close();
+            LogWriter("End Fixing " + Infile);
+        }
+        protected void LogWriter(string LogText)
+        {
+            if (richTextBox1.Lines.Length > 8)
+            {
+                richTextBox1.Text = "";
+            }
+
+            richTextBox1.Text += (LogText) + " [ " + DateTime.Now.ToString("hh:mm:ss") + " ] \n";
+            richTextBox1.Text += "===================\n";
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            richTextBox1.ScrollToCaret();
+            Application.DoEvents();
         }
     }
 }
