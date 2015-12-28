@@ -4525,7 +4525,7 @@ SELECT ID, DISPLAYID, ISDONE, DONETIME, INSERTTIME, DESCR, SAD FROM COMINGUP WHE
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
             this._adapter.InsertCommand.CommandText = @"INSERT INTO [MASTER_DATA] ([TITLE], [Title2], [DESCRIPTION], [VIDEO_PATH_HI]) VALUES (@TITLE, @Title2, @DESCRIPTION, @VIDEO_PATH_HI);
-SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = SCOPE_IDENTITY()) ORDER BY ID DESC";
+SELECT TOP (1) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = SCOPE_IDENTITY()) ORDER BY ID DESC";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TITLE", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TITLE", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Title2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Title2", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -4534,7 +4534,7 @@ SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
             this._adapter.UpdateCommand.CommandText = @"UPDATE [MASTER_DATA] SET [TITLE] = @TITLE, [Title2] = @Title2, [DESCRIPTION] = @DESCRIPTION, [VIDEO_PATH_HI] = @VIDEO_PATH_HI WHERE (([ID] = @Original_ID));
-SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = @ID) ORDER BY ID DESC";
+SELECT TOP (1) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA WHERE (ID = @ID) ORDER BY ID DESC";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TITLE", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TITLE", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Title2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Title2", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -4557,12 +4557,9 @@ SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI FROM MASTER_DATA
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT TOP (2000) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI
-FROM   MASTER_DATA
-WHERE (TITLE LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL) OR
-             (Title2 LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL) OR
-             (DESCRIPTION LIKE N'%'+@text+'%') AND (VIDEO_PATH_HI IS NOT NULL)
-ORDER BY ID DESC";
+            this._commandCollection[0].CommandText = "SELECT TOP (1) ID, TITLE, Title2, DESCRIPTION, VIDEO_PATH_HI\r\nFROM   MASTER_DATA\r" +
+                "\nWHERE (TITLE LIKE N\'%\'+@text+\'%\') AND (VIDEO_PATH_HI IS NOT NULL) \r\nORDER BY ID" +
+                " DESC";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@text", global::System.Data.SqlDbType.NVarChar, 2147483647, global::System.Data.ParameterDirection.Input, 0, 0, "TITLE", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }

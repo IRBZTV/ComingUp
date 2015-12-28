@@ -482,7 +482,7 @@ namespace ComingUpRndr
         {
             Process proc = new Process();
             proc.StartInfo.FileName = Path.GetDirectoryName(Application.ExecutablePath) + "//mencoder";
-            proc.StartInfo.Arguments = " -ss 00:01:00  -endpos 00:00:30 -oac pcm -ovc x264 " + "  \"" + inFile + "\"   -o \"" + outFile+ "\"";
+            proc.StartInfo.Arguments = " -ss 00:01:15  -endpos 00:00:30 -oac pcm -ovc x264 " + "  \"" + inFile + "\"   -o \"" + outFile+ "\"";
             proc.StartInfo.RedirectStandardError = true;
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.CreateNoWindow = true;
