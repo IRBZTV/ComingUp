@@ -160,7 +160,7 @@ namespace ComingUpRndr
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
                         Str.WriteLine("D" + (i + 1).ToString() + "=[\"" + Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[i]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute + "\"]");
-                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r"));
+                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[i]["Caption"].ToString().Replace("\r\n", "\\r").Trim());
                        
                         
                         //Arm1Q:
@@ -277,7 +277,7 @@ namespace ComingUpRndr
                         richTextBox1.ScrollToCaret();
                         Application.DoEvents();
                         Str.WriteLine("D" + (p + 1).ToString() + "=[\"" + Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r") + "\",\"" + Dt.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 2) + ":" + FinalMinute  + "\"]");
-                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r"));
+                        MyDB.MASTER_DATADataTable Arch_Dt = Arch_Ta.GetData(Dt.Rows[p - Dt.Rows.Count]["Caption"].ToString().Replace("\r\n", "\\r").Trim());
 
                         //Arm1Q:
                         string dirArm1 = ConfigurationSettings.AppSettings["Arm1Q"].ToString().Trim() + "\\" + Dt.Rows[p - Dt.Rows.Count]["date"].ToString().Replace("\\", "-").Replace("/", "-") + "_" + Dt.Rows[p - Dt.Rows.Count]["Time"].ToString().Substring(0, 2) + "-" + FinalMinute;
